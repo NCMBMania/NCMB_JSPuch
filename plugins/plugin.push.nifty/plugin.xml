@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  NiftyMB Cloud for Push Notificaction Plugin
+  Copyright 2014 NIFTY Corporation. All Rights Reserved.
+  
+  GooglePlayServices library
+  Copyright (c) 2013 The Chromium Authors. All rights reserved.
+-->
+<plugin
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="plugin.push.nifty"
+    version="1.0.0">
+
+    <name>NiftyMB</name>
+    <description>NiftyMB Cloud for Push Notification Plugin</description>
+    <license>Copyright 2014 NIFTY Corporation. All Rights Reserved.</license>
+    
+    <engines>
+        <engine name="cordova" version=">=2.9.0" />
+    </engines>
+    
+    <js-module src="www/nifty.js" name="NiftyCloud">
+        <clobbers target="NCMB.monaca" />
+    </js-module>
+
+
+    <!-- android -->
+    <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="NiftyPushNotification" >
+                <param name="android-package" value="plugin.push.nifty.NiftyPushNotification"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.VIBRATE" />
+            <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+            <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+            <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+
+            <activity android:name="plugin.push.nifty.NiftyPushActivity"            
+                android:label="NiftyPushActivity">
+            </activity>
+           
+            <receiver
+                android:name="com.nifty.cloud.mb.NCMBGCMBroadcastReceiver"
+                android:permission="com.google.android.c2dm.permission.SEND" >
+                <intent-filter>
+                    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                    <category android:name="$PACKAGE_NAME" />
+                </intent-filter>
+            </receiver>
+            <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        </config-file>
+
+        <source-file src="src/android/NiftyPushNotification.java" target-dir="src/plugin/push/nifty/" />
+        <source-file src="src/android/NiftyPushActivity.java" target-dir="src/plugin/push/nifty/" />
+
+        <source-file src="src/android/libs/NCMB.jar" target-dir="libs/" />
+        
+        <source-file src="src/android/libs/google-play-services.jar" target-dir="libs/" />
+        <source-file src="src/android/version.xml" target-dir="res/values" />
+    </platform>    
+
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="NiftyPushNotification">
+                <param name="ios-package" value="NiftyPushNotification"/>
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/AppDelegate+NiftyCloud.h" />
+        <source-file src="src/ios/AppDelegate+NiftyCloud.m" />
+        <header-file src="src/ios/NiftyPushNotification.h" />
+        <source-file src="src/ios/NiftyPushNotification.m" />
+        <header-file src="src/ios/JSONKit.h"/>
+        <source-file src="src/ios/JSONKit.m" compiler-flags="-fno-objc-arc" />
+
+        <!-- framework -->
+        <framework src="AudioToolbox.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="MobileCoreServices.framework" />
+        <!-- <framework src="src/ios/NCMB.framework" custom="true"/> -->
+    </platform>
+
+</plugin>
+
+

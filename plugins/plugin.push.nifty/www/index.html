@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="cordova.js"></script>
+    <script>                
+        // PhoneGap event handler
+
+
+        window.addEventListener("load",function(){
+            if(window.NCMB.monaca){
+                
+                window.NCMB.monaca.setHandler(
+                    function(data){
+                        alert("test::" + data);
+                    }
+                );
+                
+                // PhoneGap event handler
+                document.addEventListener("deviceready", onDeviceReady, false);
+                
+                function onDeviceReady(){
+                    window.NCMB.monaca.setDeviceToken(
+                                       "application_key",
+                                       "client_key",
+                                       "sender_id"
+                                       );
+                    
+                    window.monaca.cloud.Push.send("deviceReadey");
+                }
+                
+            }else{
+                alert("not found");
+            }
+        },false);
+        
+    </script>
+</head>
+<body>
+    
+    <h1>Nifty Push Notification Starter</h1>
+    
+</body>
+</html>
